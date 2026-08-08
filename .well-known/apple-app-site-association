@@ -1,0 +1,17 @@
+{
+    "applinks": {
+        "details": [
+            {
+                "appIDs": [
+                    "Z8C97K8HWG.com.excaliber.whirl"
+                ],
+                "components": [
+                    {
+                        "/": "/whirl-sites/*",
+                        "comment": "Matches any URL whose path starts with /whirl-sites/"
+                    }
+                ]
+            }
+        ]
+    }
+}
