@@ -7,8 +7,8 @@
                 ],
                 "components": [
                     {
-                        "/": "/whirl-sites/*",
-                        "comment": "Matches any URL whose path starts with /whirl-sites/"
+                        "/": "/auth/*",
+                        "comment": "Matches any URL whose path starts with /auth/"
                     }
                 ]
             }
