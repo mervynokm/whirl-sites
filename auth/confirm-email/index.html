@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confirm your email — Whirl</title>
+<meta name="description" content="Finish confirming your Whirl account and return to the app.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="../../favicon.ico" sizes="any">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png">
+<link rel="stylesheet" href="../../assets/css/legal.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="brand-link" href="https://whirl.app">
+      <img src="../../assets/img/whirl-logo.svg" alt="" width="32" height="32">
+      <span class="brand-link__word">whirl</span>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+  <div class="auth-bridge" id="auth-bridge">
+    <h1>Almost there</h1>
+    <p>Your email is confirmed. Open the whirl app to finish signing in.</p>
+    <div class="auth-bridge__actions">
+      <a id="open-whirl" class="btn-primary" href="whirl://auth/confirm-email">Open whirl</a>
+    </div>
+    <p class="caption">Don't have the app yet?
+      <!-- ASSUMPTION A3 (blocked on App Store Connect record): placeholder URL, must be replaced before real users hit this page. -->
+      <a href="https://apps.apple.com/app/whirl/idAPPSTORE_ID_TBD" data-appstore-placeholder="true">Get whirl on the App Store</a>
+    </p>
+    <p class="caption">If the app didn't open automatically, tap the button above &mdash; your confirmation is already saved.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="footer-row">
+      <a class="footer-brand" href="https://whirl.app">
+        <img src="../../assets/img/whirl-logo-mono.svg" alt="" width="24" height="24">
+        <span>whirl</span>
+      </a>
+    </div>
+    <div class="footer-row footer-links">
+      <a href="/terms">Terms of Service</a>
+      <span class="dot">&middot;</span>
+      <a href="/privacy">Privacy Policy</a>
+    </div>
+    <div class="footer-row footer-contact">
+      <span>Questions? <a href="mailto:privacy@whirl.app">privacy@whirl.app</a></span>
+    </div>
+    <p class="footer-fineprint">&copy; 2026 Mervyn Ong. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // ASSUMPTION A2 (pending WHIRL-104 confirmation): app registers custom scheme "whirl"
+  // with a matching host/path for this deep link.
+  var DEEP_LINK_BASE = "whirl://auth/confirm-email";
+
+  // Forwarded verbatim and unparsed: Supabase may land here via a query-param
+  // flow (?token_hash=...&type=signup / ?code=...), a fragment flow
+  // (#access_token=...), an "?error=..." outcome, or with nothing at all.
+  // location.search / location.hash already include their own "?"/"#" prefix
+  // and are "" when absent, so no extra separator is added here.
+  var target = DEEP_LINK_BASE + window.location.search + window.location.hash;
+
+  var wrapper = document.getElementById("auth-bridge");
+  var openLink = document.getElementById("open-whirl");
+  if (openLink) {
+    openLink.setAttribute("href", target);
+  }
+
+  // Stage B fallback is hidden the instant this synchronous script runs
+  // (before the browser gets a chance to paint the wrapper below), then
+  // revealed after a short delay. Never invert this: the markup ships
+  // without .is-pending so no-JS users see the fallback immediately.
+  if (wrapper) {
+    wrapper.classList.add("is-pending");
+  }
+
+  // Stage A (best-effort, on load): a Universal Link cannot be triggered by
+  // script, and one back to this same origin would never open the app even
+  // if it could be — both are enforced by iOS itself. If this page rendered
+  // at all, that handoff already did not happen or is unavailable. This
+  // custom-scheme attempt is the only mechanism left that can still open an
+  // installed app from here.
+  try {
+    window.location.replace(target);
+  } catch (e) {
+    // Some browsers throw when replacing the location with an unregistered
+    // custom scheme; there is nothing actionable to do here, so it's ignored
+    // and Stage B's fallback UI proceeds normally.
+  }
+
+  var pendingTimer = window.setTimeout(function () {
+    if (wrapper) {
+      wrapper.classList.remove("is-pending");
+    }
+  }, 1500);
+
+  // If the tab is hidden before the timer fires, the app switch already
+  // happened — clear the timer so the fallback never flashes in behind it.
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      window.clearTimeout(pendingTimer);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -23,6 +23,11 @@
   --brand-primary-pressed: #D46A2E;
   --brand-primary-subtle: #FEF0E8;
   --brand-secondary: #2E9E6E;
+  /* Darkened, button-only variants of --brand-primary: white text on the
+     base brand orange fails WCAG AA (2.75:1); these hit 4.5:1+ while
+     staying in the same hue family. Scoped to .btn-primary only. */
+  --btn-primary-bg: #BE4E0F;
+  --btn-primary-bg-hover: #983E0C;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,6 +44,10 @@
     --brand-primary-pressed: #ED7940;
     --brand-primary-subtle: #3D2A1E;
     --brand-secondary: #2B8F63;
+    /* Dark-mode button-only variants: white text on dark-mode
+       --brand-primary fails WCAG AA (3.37:1); these hit 4.5:1+. */
+    --btn-primary-bg: #A94819;
+    --btn-primary-bg-hover: #7C3513;
   }
 }
 
@@ -467,4 +476,44 @@ strong {
 a:focus-visible {
   outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
+}
+
+/* ---------- Auth bridge page (auth/confirm-email) ---------- */
+.auth-bridge {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 48px 0 24px;
+  text-align: center;
+}
+
+.auth-bridge h1 {
+  margin-bottom: 12px;
+}
+
+.auth-bridge__actions {
+  margin: 24px 0 16px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 28px;
+  border-radius: 12px;
+  background: var(--btn-primary-bg);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--btn-primary-bg-hover);
+  color: #fff;
+}
+
+.is-pending {
+  display: none;
 }
